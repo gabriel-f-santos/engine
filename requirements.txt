@@ -1,0 +1,5 @@
+requests
+sqlalchemy
+black
+flake8
+alembic
