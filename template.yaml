@@ -14,8 +14,7 @@ Resources:
   CreatePolicyFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: src/handlers
-      Handler: create_policy.lambda_handler
+      Handler: src.handlers.create_policy.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
