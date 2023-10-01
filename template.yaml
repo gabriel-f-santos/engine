@@ -11,7 +11,7 @@ Globals:
     Timeout: 3
     VpcConfig:
       SecurityGroupIds:
-        - !Ref MyDBSecurityGroup
+        - !Ref DBSubnetGroup
       SubnetIds:
         - !Ref MainSubnet
 
@@ -33,6 +33,13 @@ Resources:
       VpcId: 
         Ref: MainVPC
 
+  DBSubnetGroup:
+    Type: 'AWS::RDS::DBSubnetGroup'
+    Properties:
+      DBSubnetGroupDescription: 'Subnet group for RDS DB instance'
+      SubnetIds:
+        - !Ref MainSubnet
+
   CreatePolicyFunction:
     Type: AWS::Serverless::Function 
     Properties:
@@ -41,22 +48,22 @@ Resources:
       Runtime: python3.11
       Architectures:
         - x86_64
-      Auth:
-        DefaultAuthorizer: Authorizer
-        Authorizers:
-          AuthorizerFunction:
-            FunctionPayloadType: REQUEST
-            FunctionArn: 
-              GetAtt: AuthorizerFunction.Arn
-            Identity:
-              Headers:
-                - Authorization
       Events:
         CreatePolicy:
           Type: Api 
           Properties:
             Path: /create-policy
             Method: post
+            Auth:
+              DefaultAuthorizer: Authorizer
+              Authorizers:
+                AuthorizerFunction:
+                  FunctionPayloadType: REQUEST
+                  FunctionArn: 
+                    GetAtt: AuthorizerFunction.Arn
+                  Identity:
+                    Headers:
+                      - Authorization
 
   CreateTenantFunction:
     Type: AWS::Serverless::Function 
@@ -102,16 +109,16 @@ Resources:
           Properties:
             Path: /create-engine
             Method: post
-      Auth:
-        DefaultAuthorizer: Authorizer
-        Authorizers:
-          AuthorizerAPIKeyFunction:
-            FunctionPayloadType: REQUEST
-            FunctionArn: 
-              GetAtt: AuthorizerAPIKeyFunction.Arn
-            Identity:
-              Headers:
-                - x-api-key
+            Auth:
+              DefaultAuthorizer: Authorizer
+              Authorizers:
+                AuthorizerAPIKeyFunction:
+                  FunctionPayloadType: REQUEST
+                  FunctionArn: 
+                    GetAtt: AuthorizerAPIKeyFunction.Arn
+                  Identity:
+                    Headers:
+                      - x-api-key
 
   AuthorizerFunction:
     Type: AWS::Serverless::Function 
