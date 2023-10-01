@@ -118,9 +118,7 @@ class TestCreateHandler(unittest.TestCase):
 
     def test_unauthorized_request(self):
         with db_session.create_session() as session:
-            tenant = (
-                session.query(Tenant).filter_by(id=self.tenant_id).first()
-            )
+            tenant = session.query(Tenant).filter_by(id=self.tenant_id).first()
             tenant.is_active = False
             session.commit()
 
@@ -132,8 +130,6 @@ class TestCreateHandler(unittest.TestCase):
         self.assertEqual(response["body"], expected_body)
 
         with db_session.create_session() as session:
-            tenant = (
-                session.query(Tenant).filter_by(id=self.tenant_id).first()
-            )
+            tenant = session.query(Tenant).filter_by(id=self.tenant_id).first()
             tenant.is_active = True
             session.commit()
