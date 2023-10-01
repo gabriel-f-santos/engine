@@ -38,13 +38,18 @@ test:
 	@echo "Running tests..."
 	$(PYTHON) -m unittest
 
+migrate:
+	@echo "Aplying migrations"
+	source $(VIRTUALENV)/bin/activate
+	alembic upgrade head
+
 format:
 	@echo "Formatting code with Black..."
 	black $(PWD) --line-length=80 --target-version=py311
 
 lint:
 	@echo "Linting code with Flake8..."
-	$(FLAKE8) $(PWD) --max-line-length=80 --exclude .venv,dependencies,migrations
+	$(FLAKE8) $(PWD) --max-line-length=80 --exclude .venv,dependencies,alembic
 
 # Default target
 .DEFAULT_GOAL := test

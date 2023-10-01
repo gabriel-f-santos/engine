@@ -2,13 +2,11 @@ import sqlalchemy as sa
 
 from sqlalchemy.orm import sessionmaker
 
-from pathlib import Path # Usado no SQLite
+from pathlib import Path  # Usado no SQLite
 from typing import Optional
 
 from sqlalchemy.orm import Session
 from sqlalchemy.future.engine import Engine
-
-from src.models.models import Base
 
 __engine: Optional[Engine] = None
 
@@ -22,12 +20,14 @@ def create_engine() -> Engine:
     if __engine:
         return
 
-    arquivo_db = 'mydatabase.db'
+    arquivo_db = "mydatabase.db"
     folder = Path(arquivo_db).parent
     folder.mkdir(parents=True, exist_ok=True)
 
-    conn_str = f'sqlite:///{arquivo_db}'
-    __engine = sa.create_engine(url=conn_str, echo=False, connect_args={"check_same_thread": False})
+    conn_str = f"sqlite:///{arquivo_db}"
+    __engine = sa.create_engine(
+        url=conn_str, echo=False, connect_args={"check_same_thread": False}
+    )
     return __engine
 
 
@@ -38,8 +38,8 @@ def create_session() -> Session:
     global __engine
 
     if not __engine:
-        create_engine() # create_engine(sqlite=True)
-    
+        create_engine()  # create_engine(sqlite=True)
+
     __session = sessionmaker(__engine, expire_on_commit=False, class_=Session)
 
     session: Session = __session()
