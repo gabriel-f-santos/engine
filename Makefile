@@ -20,7 +20,7 @@ TEST_DIR := tests
 
 install: venv
 	@echo "Installing project dependencies..."
-	pip install -r requirements.txt
+	pip install -r src/requirements.txt
 
 clean: 
 	@echo "Cleaning..."
