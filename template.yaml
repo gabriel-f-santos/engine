@@ -11,20 +11,39 @@ Globals:
     Timeout: 3
 
 Resources:
-  HelloWorldFunction:
+  CreatePolicyFunction:
     Type: AWS::Serverless::Function 
     Properties:
       CodeUri: src/
-      Handler: handlers.app.lambda_handler
+      Handler: handlers.create_policy.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
+      Auth:
+        DefaultAuthorizer: MyAuthorizer
+        Authorizers:
+          AuthorizerFunction:
+            FunctionPayloadType: REQUEST
+            FunctionArn: 
+              GetAtt: AuthorizerFunction.Arn
+            Identity:
+              Headers:
+                - Authorization
       Events:
         HelloWorld:
           Type: Api 
           Properties:
             Path: /hello
             Method: get
+
+  AuthorizerFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: src/
+      Handler: handlers.authorizer.lambda_handler
+      Runtime: python3.11
+      Architectures:
+        - x86_64
 
 Outputs:
   HelloWorldApi:

@@ -3,3 +3,4 @@ sqlalchemy
 black
 flake8
 alembic
+PyJWT

@@ -16,7 +16,6 @@ FLAKE8 := $(VENV_DIR)/bin/flake8
 SRC_DIR := src
 TEST_DIR := tests
 
-# Targets and Rules
 .PHONY: install test format lint
 
 install: venv

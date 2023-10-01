@@ -29,7 +29,7 @@ class TestModels(unittest.TestCase):
             name="Policy Name",
             partner_id=1,
             policy_details={
-                "1": {"rule": "gt", "field": "age", "threshold": 20}
+                "1": {"condition": "gt", "field": "age", "threshold": 20}
             },
         )
         with db_session.create_session() as session:
