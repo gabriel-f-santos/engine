@@ -1,5 +1,5 @@
 import unittest
-from src.models import db_session, Partner, Policy  # Import your models here
+from src.models import db_session, Partner, Policy
 
 
 class TestModels(unittest.TestCase):

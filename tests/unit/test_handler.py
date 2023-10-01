@@ -1,17 +1,29 @@
 import json
 
 import unittest
+from http import HTTPStatus
 
 from src.handlers import create_policy
-from src.models import db_session
-
-session = db_session.create_session()
+from src.models import db_session, Partner, Policy
 
 
 class TestLambdaHandler(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        partner = Partner(name="Partner Name", email="partner@example.com")
+        with db_session.create_session() as session:
+            session.add(partner)
+            session.commit()
+
+    @classmethod
+    def tearDownClass(cls):
+        with db_session.create_session() as session:
+            session.query(Partner).delete()
+            session.commit()
+
     def test_lambda_handler(self):
         event = {
-            "body": '{ "test": "body"}',
+            "body": '{ "name": "Policy Name", "partner_id": 1, "policy_details": {"1": {"rule": "gt", "field": "age", "threshold": 20}}} ',  # noqa
             "resource": "/{proxy+}",
             "requestContext": {
                 "resourceId": "123456",
@@ -64,6 +76,13 @@ class TestLambdaHandler(unittest.TestCase):
         context = {}
         response = create_policy.lambda_handler(event, context)
 
-        self.assertEqual(response["statusCode"], 200)
-        expected_body = json.dumps({"message": "hello world"})
+        self.assertEqual(response["statusCode"], HTTPStatus.CREATED.value)
+        expected_body = json.dumps({"message": "policy created"})
         self.assertEqual(response["body"], expected_body)
+
+        with db_session.create_session() as session:
+            created_policy = (
+                session.query(Policy).filter_by(name="Policy Name").first()
+            )
+        self.assertIsNotNone(created_policy)
+        self.assertEqual(created_policy.partner_id, 1)
