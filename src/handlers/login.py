@@ -21,6 +21,7 @@ def lambda_handler(event, context):
         token = jwt.encode(
             {
                 "tenant_id": tenant.id,
+                "apiKey": tenant.api_key,
                 "exp": datetime.utcnow() + timedelta(days=5),
             },
             settings.JWT_SECRET,
