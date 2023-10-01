@@ -8,7 +8,7 @@ def lambda_handler(event, context):
     with db_session.create_session() as session:
         partner = (
             session.query(Partner)
-            .filter_by(partner_id=body["partner_id"])
+            .filter_by(id=body["partner_id"])
             .first()
         )
 
