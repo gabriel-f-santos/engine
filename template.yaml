@@ -5,6 +5,11 @@ Description: >
 
   Sample SAM Template for sam-engine
 
+Parameters:
+  VpcCIDR:
+    Type: String
+    Default: '10.0.0.0/16'
+    Description: 'CIDR block for the VPC'
 
 Globals:
   Function:
@@ -20,25 +25,40 @@ Resources:
   MainVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
-      CidrBlock: '10.0.0.0/16'
+      CidrBlock: !Ref VpcCIDR
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
-  MainSubnet:
+  Subnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
       AvailabilityZone: !Select [ 0, !GetAZs '' ]
-      CidrBlock: '10.0.0.0/24'
-      MapPublicIpOnLaunch: true
-      VpcId: 
-        Ref: MainVPC
+      CidrBlock: '10.0.1.0/24'
+      MapPublicIpOnLaunch: false
+      VpcId: !Ref MainVPC
 
-  DBSubnetGroup:
+  Subnet2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock: '10.0.2.0/24'
+      MapPublicIpOnLaunch: false
+      VpcId: !Ref MainVPC
+
+  SecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: 'Security group for RDS and Lambda'
+      VpcId: !Ref MainVPC
+
+
+  MyDBSubnetGroup:
     Type: 'AWS::RDS::DBSubnetGroup'
     Properties:
       DBSubnetGroupDescription: 'Subnet group for RDS DB instance'
       SubnetIds:
-        - !Ref MainSubnet
+        - !Ref Subnet1
+        - !Ref Subnet2
 
   CreatePolicyFunction:
     Type: AWS::Serverless::Function 
