@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     }
 
     try:
-        payload = jwt.decode(token, "secret", algorithms=["HS256"])
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"])
         authResponse["context"] = {"partner_id": payload["partner_id"]}
         authResponse["principalId"] = (payload["sub"],)
         return authResponse

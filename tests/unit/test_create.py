@@ -5,7 +5,7 @@ from src.handlers import create_policy
 from src.models import db_session, Partner, Policy
 
 
-class TestLambdaHandler(unittest.TestCase):
+class TestCreateHandler(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         partner = Partner(name="Partner Name", email="partner@example.com")
