@@ -9,8 +9,30 @@ Description: >
 Globals:
   Function:
     Timeout: 3
+    VpcConfig:
+      SecurityGroupIds:
+        - !Ref MyDBSecurityGroup
+      SubnetIds:
+        - !Ref MainSubnet
 
 Resources:
+
+  MainVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: '10.0.0.0/16'
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  MainSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: '10.0.0.0/24'
+      MapPublicIpOnLaunch: true
+      VpcId: 
+        Ref: MainVPC
+
   CreatePolicyFunction:
     Type: AWS::Serverless::Function 
     Properties:
