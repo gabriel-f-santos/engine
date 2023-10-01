@@ -2,17 +2,23 @@ import json
 from http import HTTPStatus
 from src.models import db_session, Partner
 import bcrypt
+import secrets
 
 
 def lambda_handler(event, context):
     body = json.loads(event["body"])
     password = bcrypt.hashpw(body["password"].encode(), bcrypt.gensalt())
 
-    partner = Partner(name=body["name"], email=body["email"], password=password)
+    api_key = secrets.token_hex(16)
+    partner = Partner(
+        name=body["name"],
+        email=body["email"],
+        password=password,
+        api_key=api_key,
+    )
 
     with db_session.create_session() as session:
-        partner = session.query(Partner).filter_by(email=body["email"]).first()
-        if partner:
+        if session.query(Partner).filter_by(email=body["email"]).first():
             return {
                 "statusCode": HTTPStatus.CONFLICT.value,
                 "body": json.dumps({"message": "Error creating partner"}),
