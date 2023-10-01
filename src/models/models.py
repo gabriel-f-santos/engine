@@ -21,6 +21,7 @@ class Partner(Base):
     name = Column(String)
     email = Column(String, unique=True)
     password = Column(String)
+    api_key = Column(String)
     created_at = Column(DateTime, default=func.now())
     is_active = Column(Boolean, default=True)
 

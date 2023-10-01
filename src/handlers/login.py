@@ -13,7 +13,9 @@ def lambda_handler(event, context):
     with db_session.create_session() as session:
         partner = session.query(Partner).filter_by(email=body["email"]).first()
 
-    match_password = check_password(body["password"], partner.password)
+    match_password = bcrypt.checkpw(
+        body["password"].encode("utf-8"), partner.password
+    )
 
     if match_password:
         token = jwt.encode(
@@ -21,20 +23,16 @@ def lambda_handler(event, context):
                 "partner_id": partner.id,
                 "exp": datetime.utcnow() + timedelta(days=5),
             },
-            settings.SECRET_KEY,
+            settings.JWT_SECRET,
             algorithm="HS256",
         )
 
         return {
             "statusCode": HTTPStatus.OK.value,
-            "body": json.dumps({"token": token.decode("utf-8")}),
+            "body": json.dumps({"token": token}),
         }
 
     return {
         "statusCode": HTTPStatus.UNAUTHORIZED.value,
         "body": json.dumps({"message": "Invalid password or email"}),
     }
-
-
-def check_password(password, actual_password):
-    return bcrypt.checkpw(password.encode("utf-8"), actual_password)
