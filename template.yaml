@@ -8,11 +8,6 @@ Description: >
 Globals:
   Function:
     Timeout: 3
-    VpcConfig:
-      SecurityGroupIds:
-        - !Ref DBSubnetGroup
-      SubnetIds:
-        - !Ref MainSubnet
 
 Resources:
 
@@ -31,7 +26,7 @@ Resources:
             Path: /create-policy
             Method: post
             Auth:
-              DefaultAuthorizer: Authorizer
+              DefaultAuthorizer: AuthorizerFunction
               Authorizers:
                 AuthorizerFunction:
                   FunctionPayloadType: REQUEST
@@ -86,7 +81,7 @@ Resources:
             Path: /create-engine
             Method: post
             Auth:
-              DefaultAuthorizer: Authorizer
+              DefaultAuthorizer: AuthorizerAPIKeyFunction
               Authorizers:
                 AuthorizerAPIKeyFunction:
                   FunctionPayloadType: REQUEST
