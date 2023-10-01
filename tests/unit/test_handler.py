@@ -4,10 +4,10 @@ from http import HTTPStatus
 from src.handlers import create_policy
 from src.models import db_session, Partner, Policy
 
+
 class TestLambdaHandler(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-
         partner = Partner(name="Partner Name", email="partner@example.com")
         with db_session.create_session() as session:
             session.add(partner)
@@ -15,7 +15,15 @@ class TestLambdaHandler(unittest.TestCase):
         cls.partner_id = partner.id
 
         cls.event = {
-            "body": json.dumps({"name": "Policy Name", "partner_id": cls.partner_id, "policy_details": {"1": {"rule": "gt", "field": "age", "threshold": 20}}}),
+            "body": json.dumps(
+                {
+                    "name": "Policy Name",
+                    "partner_id": cls.partner_id,
+                    "policy_details": {
+                        "1": {"rule": "gt", "field": "age", "threshold": 20}
+                    },
+                }
+            ),
             "resource": "/{proxy+}",
         }
 
@@ -34,14 +42,24 @@ class TestLambdaHandler(unittest.TestCase):
         self.assertEqual(response["body"], expected_body)
 
         with db_session.create_session() as session:
-            created_policy = session.query(Policy).filter_by(name="Policy Name").first()
+            created_policy = (
+                session.query(Policy).filter_by(name="Policy Name").first()
+            )
             self.assertIsNotNone(created_policy)
             self.assertEqual(created_policy.partner_id, self.partner_id)
 
     def test_forbidden_request(self):
         event = self.event.copy()
-        event["body"] = json.dumps({"name": "Policy Name", "partner_id": 999, "policy_details": {"1": {"rule": "gt", "field": "age", "threshold": 20}}})
-        
+        event["body"] = json.dumps(
+            {
+                "name": "Policy Name",
+                "partner_id": 999,
+                "policy_details": {
+                    "1": {"rule": "gt", "field": "age", "threshold": 20}
+                },
+            }
+        )
+
         context = {}
         response = create_policy.lambda_handler(event, context)
 
@@ -51,7 +69,9 @@ class TestLambdaHandler(unittest.TestCase):
 
     def test_unauthorized_request(self):
         with db_session.create_session() as session:
-            partner = session.query(Partner).filter_by(id=self.partner_id).first()
+            partner = (
+                session.query(Partner).filter_by(id=self.partner_id).first()
+            )
             partner.is_active = False
             session.commit()
 
@@ -63,6 +83,8 @@ class TestLambdaHandler(unittest.TestCase):
         self.assertEqual(response["body"], expected_body)
 
         with db_session.create_session() as session:
-            partner = session.query(Partner).filter_by(id=self.partner_id).first()
+            partner = (
+                session.query(Partner).filter_by(id=self.partner_id).first()
+            )
             partner.is_active = True
             session.commit()

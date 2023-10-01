@@ -7,9 +7,7 @@ def lambda_handler(event, context):
     body = json.loads(event["body"])
     with db_session.create_session() as session:
         partner = (
-            session.query(Partner)
-            .filter_by(id=body["partner_id"])
-            .first()
+            session.query(Partner).filter_by(id=body["partner_id"]).first()
         )
 
     if partner is None:
