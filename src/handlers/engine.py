@@ -19,11 +19,11 @@ def evaluate_field(value_to_evaluate, condition, threshold):
 
 
 def lambda_handler(event, context):
-    partner_id = context["authorizer"]["partner_id"]
+    tenant_id = context["authorizer"]["tenant_id"]
     body = json.loads(event["body"])
 
     with db_session.create_session() as session:
-        policy = session.query(Policy).filter_by(id=partner_id).first()
+        policy = session.query(Policy).filter_by(id=tenant_id).first()
         policy_details = policy.policy_details
 
     for index, policy in policy_details.items():

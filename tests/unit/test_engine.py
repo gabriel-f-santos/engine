@@ -2,23 +2,23 @@ import json
 import unittest
 from http import HTTPStatus
 from src.handlers import engine
-from src.models import db_session, Partner, Policy
+from src.models import db_session, Tenant, Policy
 
 
 class TestCreateHandler(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        partner = Partner(name="Partner Name", email="partner@example.com")
+        tenant = Tenant(name="Tenant Name", email="tenant@example.com")
 
         with db_session.create_session() as session:
-            session.add(partner)
+            session.add(tenant)
             session.commit()
 
-        cls.partner_id = partner.id
+        cls.tenant_id = tenant.id
 
         policy = Policy(
             name="Policy Name",
-            partner_id=cls.partner_id,
+            tenant_id=cls.tenant_id,
             policy_details={
                 "1": {"condition": "gt", "field": "age", "threshold": 20},
                 "2": {"condition": "gte", "field": "income", "threshold": 1000},
@@ -83,12 +83,12 @@ class TestCreateHandler(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         with db_session.create_session() as session:
-            session.query(Partner).delete()
+            session.query(Tenant).delete()
             session.query(Policy).delete()
             session.commit()
 
     def test_successful_engine_evaluation(self):
-        context = {"authorizer": {"partner_id": self.partner_id}}
+        context = {"authorizer": {"tenant_id": self.tenant_id}}
 
         response = engine.lambda_handler(self.event, context)
 
@@ -97,7 +97,7 @@ class TestCreateHandler(unittest.TestCase):
         self.assertEqual(response["body"], expected_body)
 
     def test_rejected_age_engine_evaluation(self):
-        context = {"authorizer": {"partner_id": self.partner_id}}
+        context = {"authorizer": {"tenant_id": self.tenant_id}}
 
         self.event["body"] = json.dumps({"age": 20, "income": 3000})
         response = engine.lambda_handler(self.event, context)
@@ -107,7 +107,7 @@ class TestCreateHandler(unittest.TestCase):
         self.assertEqual(response["body"], expected_body)
 
     def test_rejected_income_engine_evaluation(self):
-        context = {"authorizer": {"partner_id": self.partner_id}}
+        context = {"authorizer": {"tenant_id": self.tenant_id}}
 
         self.event["body"] = json.dumps({"age": 21, "income": 1000})
         response = engine.lambda_handler(self.event, context)

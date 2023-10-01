@@ -2,7 +2,7 @@ from http import HTTPStatus
 import json
 import unittest
 from src.handlers import login
-from src.models import db_session, Partner
+from src.models import db_session, Tenant
 import bcrypt
 
 
@@ -11,20 +11,20 @@ class TestLoginHandler(unittest.TestCase):
         self.password = bcrypt.hashpw(
             "correct_password".encode("utf-8"), bcrypt.gensalt()
         )
-        partner = Partner(
-            name="Partner Name",
-            email="partner@example.com",
+        tenant = Tenant(
+            name="Tenant Name",
+            email="tenant@example.com",
             password=self.password,
         )
         with db_session.create_session() as session:
-            session.add(partner)
+            session.add(tenant)
             session.commit()
-        self.partner_id = partner.id
+        self.tenant_id = tenant.id
 
         self.event = {
             "body": json.dumps(
                 {
-                    "email": "partner@example.com",
+                    "email": "tenant@example.com",
                     "password": "correct_password",
                 }
             ),
@@ -80,7 +80,7 @@ class TestLoginHandler(unittest.TestCase):
 
     def tearDown(self):
         with db_session.create_session() as session:
-            session.query(Partner).delete()
+            session.query(Tenant).delete()
             session.commit()
 
     def test_successful_login(self):
@@ -95,7 +95,7 @@ class TestLoginHandler(unittest.TestCase):
 
         self.event["body"] = json.dumps(
             {
-                "email": "partner@example.com",
+                "email": "tenant@example.com",
                 "password": "wrong_password",
             }
         )

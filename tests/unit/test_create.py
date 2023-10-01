@@ -2,17 +2,17 @@ import json
 import unittest
 from http import HTTPStatus
 from src.handlers import create_policy
-from src.models import db_session, Partner, Policy
+from src.models import db_session, Tenant, Policy
 
 
 class TestCreateHandler(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        partner = Partner(name="Partner Name", email="partner@example.com")
+        tenant = Tenant(name="Tenant Name", email="tenant@example.com")
         with db_session.create_session() as session:
-            session.add(partner)
+            session.add(tenant)
             session.commit()
-        cls.partner_id = partner.id
+        cls.tenant_id = tenant.id
 
         cls.event = {
             "body": json.dumps(
@@ -80,11 +80,11 @@ class TestCreateHandler(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         with db_session.create_session() as session:
-            session.query(Partner).delete()
+            session.query(Tenant).delete()
             session.commit()
 
     def test_successful_policy_creation(self):
-        context = {"authorizer": {"partner_id": self.partner_id}}
+        context = {"authorizer": {"tenant_id": self.tenant_id}}
         response = create_policy.lambda_handler(self.event, context)
 
         self.assertEqual(response["statusCode"], HTTPStatus.CREATED.value)
@@ -96,7 +96,7 @@ class TestCreateHandler(unittest.TestCase):
                 session.query(Policy).filter_by(name="Policy Name").first()
             )
             self.assertIsNotNone(created_policy)
-            self.assertEqual(created_policy.partner_id, self.partner_id)
+            self.assertEqual(created_policy.tenant_id, self.tenant_id)
 
     def test_forbidden_request(self):
         event = self.event.copy()
@@ -109,7 +109,7 @@ class TestCreateHandler(unittest.TestCase):
             }
         )
 
-        context = {"authorizer": {"partner_id": 999}}
+        context = {"authorizer": {"tenant_id": 999}}
         response = create_policy.lambda_handler(event, context)
 
         self.assertEqual(response["statusCode"], HTTPStatus.FORBIDDEN.value)
@@ -118,13 +118,13 @@ class TestCreateHandler(unittest.TestCase):
 
     def test_unauthorized_request(self):
         with db_session.create_session() as session:
-            partner = (
-                session.query(Partner).filter_by(id=self.partner_id).first()
+            tenant = (
+                session.query(Tenant).filter_by(id=self.tenant_id).first()
             )
-            partner.is_active = False
+            tenant.is_active = False
             session.commit()
 
-        context = {"authorizer": {"partner_id": self.partner_id}}
+        context = {"authorizer": {"tenant_id": self.tenant_id}}
         response = create_policy.lambda_handler(self.event, context)
 
         self.assertEqual(response["statusCode"], HTTPStatus.UNAUTHORIZED.value)
@@ -132,8 +132,8 @@ class TestCreateHandler(unittest.TestCase):
         self.assertEqual(response["body"], expected_body)
 
         with db_session.create_session() as session:
-            partner = (
-                session.query(Partner).filter_by(id=self.partner_id).first()
+            tenant = (
+                session.query(Tenant).filter_by(id=self.tenant_id).first()
             )
-            partner.is_active = True
+            tenant.is_active = True
             session.commit()

@@ -1,6 +1,6 @@
 import json
 from http import HTTPStatus
-from src.models import db_session, Partner
+from src.models import db_session, Tenant
 import bcrypt
 import secrets
 
@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     password = bcrypt.hashpw(body["password"].encode(), bcrypt.gensalt())
 
     api_key = secrets.token_hex(16)
-    partner = Partner(
+    tenant = Tenant(
         name=body["name"],
         email=body["email"],
         password=password,
@@ -18,16 +18,16 @@ def lambda_handler(event, context):
     )
 
     with db_session.create_session() as session:
-        if session.query(Partner).filter_by(email=body["email"]).first():
+        if session.query(Tenant).filter_by(email=body["email"]).first():
             return {
                 "statusCode": HTTPStatus.CONFLICT.value,
-                "body": json.dumps({"message": "Error creating partner"}),
+                "body": json.dumps({"message": "Error creating tenant"}),
             }
 
-        session.add(partner)
+        session.add(tenant)
         session.commit()
 
     return {
         "statusCode": HTTPStatus.CREATED.value,
-        "body": json.dumps({"message": "Partner created sucessfully"}),
+        "body": json.dumps({"message": "Tenant created sucessfully"}),
     }

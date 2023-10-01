@@ -1,5 +1,5 @@
 import unittest
-from src.models import db_session, Partner, Policy
+from src.models import db_session, Tenant, Policy
 
 
 class TestModels(unittest.TestCase):
@@ -10,24 +10,24 @@ class TestModels(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         with db_session.create_session() as session:
-            session.query(Partner).delete()
+            session.query(Tenant).delete()
             session.commit()
 
-    def test_partner_model(self):
-        partner = Partner(name="Partner Name", email="partner@example.com")
+    def test_tenant_model(self):
+        tenant = Tenant(name="Tenant Name", email="tenant@example.com")
         with db_session.create_session() as session:
-            session.add(partner)
+            session.add(tenant)
             session.commit()
-            retrieved_partner = (
-                session.query(Partner).filter_by(id=partner.id).first()
+            retrieved_tenant = (
+                session.query(Tenant).filter_by(id=tenant.id).first()
             )
 
-        self.assertEqual(retrieved_partner.name, "Partner Name")
+        self.assertEqual(retrieved_tenant.name, "Tenant Name")
 
     def test_policy_model(self):
         policy = Policy(
             name="Policy Name",
-            partner_id=1,
+            tenant_id=1,
             policy_details={
                 "1": {"condition": "gt", "field": "age", "threshold": 20}
             },

@@ -1,17 +1,17 @@
 from http import HTTPStatus
 import json
 import unittest
-from src.handlers import create_partner
-from src.models import db_session, Partner
+from src.handlers import create_tenant
+from src.models import db_session, Tenant
 
 
-class TestCreatePartnerHandler(unittest.TestCase):
+class TestCreateTenantHandler(unittest.TestCase):
     def setUp(self):
-        self.email = "partner@example.com"
+        self.email = "tenant@example.com"
         self.event = {
             "body": json.dumps(
                 {
-                    "name": "partner name",
+                    "name": "tenant name",
                     "email": self.email,
                     "password": "123password",
                 }
@@ -68,31 +68,31 @@ class TestCreatePartnerHandler(unittest.TestCase):
 
     def tearDown(self):
         with db_session.create_session() as session:
-            session.query(Partner).delete()
+            session.query(Tenant).delete()
             session.commit()
 
     def test_successful_create(self):
         context = {}
-        response = create_partner.lambda_handler(self.event, context)
+        response = create_tenant.lambda_handler(self.event, context)
 
         with db_session.create_session() as session:
-            partner = session.query(Partner).filter_by(email=self.email).first()
+            tenant = session.query(Tenant).filter_by(email=self.email).first()
 
         self.assertEqual(response["statusCode"], HTTPStatus.CREATED.value)
-        self.assertEqual(partner.email, self.email)
+        self.assertEqual(tenant.email, self.email)
 
     def test_failed_login(self):
-        partner = Partner(
+        tenant = Tenant(
             name="name",
-            email="partner@example.com",
+            email="tenant@example.com",
             password="wrong_password",
         )
 
         with db_session.create_session() as session:
-            session.add(partner)
+            session.add(tenant)
             session.commit()
 
         context = {}
-        response = create_partner.lambda_handler(self.event, context)
+        response = create_tenant.lambda_handler(self.event, context)
 
         self.assertEqual(response["statusCode"], HTTPStatus.CONFLICT.value)

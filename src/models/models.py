@@ -14,8 +14,8 @@ from sqlalchemy.sql import func
 Base = declarative_base()
 
 
-class Partner(Base):
-    __tablename__ = "partners"
+class Tenant(Base):
+    __tablename__ = "tenants"
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -31,10 +31,8 @@ class Policy(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    partner_id = Column(Integer, ForeignKey("partners.id"))
-    policy_details = Column(JSON)  # JSON field for policy details
+    tenant_id = Column(Integer, ForeignKey("tenants.id"))
+    policy_details = Column(JSON)
     created_at = Column(DateTime, default=func.now())
     is_active = Column(Boolean, default=True)
-
-    # Define the relationship with the Partner model
-    partner = relationship("Partner")
+    tenant = relationship("Tenant")
