@@ -1,4 +1,5 @@
 import jwt
+from src import settings
 
 
 def lambda_handler(event, context):

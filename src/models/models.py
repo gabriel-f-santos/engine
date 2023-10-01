@@ -20,8 +20,8 @@ class Partner(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     email = Column(String, unique=True)
+    password = Column(String)
     created_at = Column(DateTime, default=func.now())
-    email = Column(String, unique=True)
     is_active = Column(Boolean, default=True)
 
 

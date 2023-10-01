@@ -20,15 +20,24 @@ def lambda_handler(event, context):
             "statusCode": HTTPStatus.UNAUTHORIZED.value,
             "body": json.dumps({"message": "forbidden"}),
         }
-
-    policy = Policy(
-        name=body["name"],
-        partner_id=partner_id,
-        policy_details=body["policy_details"],
-    )
     with db_session.create_session() as session:
-        session.add(policy)
-        session.commit()
+        existing_policy = (
+            session.query(Policy).filter_by(partner_id=partner_id).first()
+        )
+
+        if existing_policy:
+            existing_policy.name = body["name"]
+            existing_policy.policy_details = body["policy_details"]
+            session.merge(existing_policy)
+        else:
+            policy = Policy(
+                name=body["name"],
+                partner_id=partner_id,
+                policy_details=body["policy_details"],
+            )
+
+            session.add(policy)
+            session.commit()
 
     return {
         "statusCode": HTTPStatus.CREATED.value,
