@@ -18,7 +18,6 @@ class TestLambdaHandler(unittest.TestCase):
             "body": json.dumps(
                 {
                     "name": "Policy Name",
-                    "partner_id": cls.partner_id,
                     "policy_details": {
                         "1": {
                             "condition": "gt",
@@ -85,7 +84,7 @@ class TestLambdaHandler(unittest.TestCase):
             session.commit()
 
     def test_successful_policy_creation(self):
-        context = {}
+        context = {"authorizer": {"partner_id": self.partner_id}}
         response = create_policy.lambda_handler(self.event, context)
 
         self.assertEqual(response["statusCode"], HTTPStatus.CREATED.value)
@@ -104,14 +103,13 @@ class TestLambdaHandler(unittest.TestCase):
         event["body"] = json.dumps(
             {
                 "name": "Policy Name",
-                "partner_id": 999,
                 "policy_details": {
                     "1": {"condition": "gt", "field": "age", "threshold": 20}
                 },
             }
         )
 
-        context = {}
+        context = {"authorizer": {"partner_id": 999}}
         response = create_policy.lambda_handler(event, context)
 
         self.assertEqual(response["statusCode"], HTTPStatus.FORBIDDEN.value)
@@ -126,7 +124,7 @@ class TestLambdaHandler(unittest.TestCase):
             partner.is_active = False
             session.commit()
 
-        context = {}
+        context = {"authorizer": {"partner_id": self.partner_id}}
         response = create_policy.lambda_handler(self.event, context)
 
         self.assertEqual(response["statusCode"], HTTPStatus.UNAUTHORIZED.value)

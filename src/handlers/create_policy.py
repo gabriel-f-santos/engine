@@ -5,10 +5,9 @@ from src.models import db_session, Partner, Policy
 
 def lambda_handler(event, context):
     body = json.loads(event["body"])
+    partner_id = context["authorizer"].get("partner_id")
     with db_session.create_session() as session:
-        partner = (
-            session.query(Partner).filter_by(id=body["partner_id"]).first()
-        )
+        partner = session.query(Partner).filter_by(id=partner_id).first()
 
     if partner is None:
         return {
@@ -24,7 +23,7 @@ def lambda_handler(event, context):
 
     policy = Policy(
         name=body["name"],
-        partner_id=body["partner_id"],
+        partner_id=partner_id,
         policy_details=body["policy_details"],
     )
     with db_session.create_session() as session:
