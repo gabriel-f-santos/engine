@@ -1,8 +1,8 @@
 import json
 from http import HTTPStatus
 from datetime import datetime, timedelta
-from src.models import Tenant
-from src import settings, db_session
+from models import Tenant
+import settings, db_session
 import jwt
 import bcrypt
 

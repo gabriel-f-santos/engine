@@ -1,4 +1,4 @@
-from src.models import Tenant
+from models import Tenant
 import db_session
 
 

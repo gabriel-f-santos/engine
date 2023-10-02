@@ -1,7 +1,7 @@
 import json
 from http import HTTPStatus
-from src.models import Tenant, Policy
-from src import db_session
+from models import Tenant, Policy
+import db_session
 
 
 def lambda_handler(event, context):

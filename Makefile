@@ -3,6 +3,7 @@
 # venv settings
 export VIRTUALENV := $(PWD)/.venv
 export PATH       := $(VIRTUALENV)/bin:$(PATH)
+export PYTHONPATH := $(PWD)/src
 SHELL = /bin/bash
 
 # Variables
