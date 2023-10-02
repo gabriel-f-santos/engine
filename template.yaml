@@ -13,10 +13,10 @@ Parameters:
 Globals:
   Function:
     Timeout: 10
-      Environment:
-        Variables:
-          DEBUG: False
-          DB_CONNECT: !Ref DbConnection
+    Environment:
+      Variables:
+        DEBUG: False
+        DB_CONNECT: !Ref DbConnection
 
 Resources:
 
