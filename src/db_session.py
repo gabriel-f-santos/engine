@@ -20,7 +20,7 @@ def create_engine():
     global __engine
 
     if __engine:
-        return
+        return __engine
     
     if settings.DEBUG:
 

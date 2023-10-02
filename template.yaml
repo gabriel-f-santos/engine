@@ -123,3 +123,12 @@ Resources:
       Architectures:
         - x86_64
 
+  MigrateFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: src/
+      Handler: migrate.lambda_handler
+      Runtime: python3.11
+      Architectures:
+        - x86_64
+
