@@ -3,4 +3,5 @@ import os
 
 
 JWT_SECRET = "secret"
+DB_CONNECT = os.getenv('DEBUG', True)
 DEBUG = os.getenv('DEBUG', True)

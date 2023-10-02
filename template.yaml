@@ -5,9 +5,18 @@ Description: >
 
   Sample SAM Template for sam-engine
 
+Parameters:
+  DbConnection:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /db/DbConnection
+
 Globals:
   Function:
     Timeout: 10
+      Environment:
+        Variables:
+          DEBUG: False
+          DB_CONNECT: !Ref DbConnection
 
 Resources:
 
