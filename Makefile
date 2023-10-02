@@ -34,7 +34,7 @@ venv:
 	@echo "Activate virtual environment..."
 	source $(VIRTUALENV)/bin/activate
 
-test:
+test: migrate
 	@echo "Running tests..."
 	$(PYTHON) -m unittest
 
@@ -50,6 +50,3 @@ format:
 lint:
 	@echo "Linting code with Flake8..."
 	$(FLAKE8) $(PWD) --max-line-length=80 --exclude .venv,dependencies,alembic
-
-# Default target
-.DEFAULT_GOAL := test

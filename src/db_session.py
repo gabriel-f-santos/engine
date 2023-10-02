@@ -1,3 +1,4 @@
+import os
 import sqlalchemy as sa
 
 from sqlalchemy.orm import sessionmaker
@@ -7,11 +8,12 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 from sqlalchemy.future.engine import Engine
+import settings
 
 __engine: Optional[Engine] = None
 
 
-def create_engine() -> Engine:
+def create_engine():
     """
     Função para configurar a conexão ao banco de dados.
     """
@@ -19,17 +21,17 @@ def create_engine() -> Engine:
 
     if __engine:
         return
+    
+    if settings.DEBUG:
 
-    arquivo_db = "mydatabase.db"
-    folder = Path(arquivo_db).parent
-    folder.mkdir(parents=True, exist_ok=True)
-
-    conn_str = f"sqlite:///{arquivo_db}"
-    __engine = sa.create_engine(
-        url=conn_str, echo=False, connect_args={"check_same_thread": False}
-    )
+        # import ipdb;ipdb.set_trace()
+        db_path = f"sqlite:///src/mydatabase.db"
+        __engine = sa.create_engine(url=db_path, echo=False, connect_args={"check_same_thread": False})
+    else:
+        conn_str = "postgresql://geek:university@localhost:5432/picoles"
+        __engine = sa.create_engine(url=conn_str, echo=False)
+    
     return __engine
-
 
 def create_session() -> Session:
     """
@@ -38,7 +40,7 @@ def create_session() -> Session:
     global __engine
 
     if not __engine:
-        create_engine()  # create_engine(sqlite=True)
+        create_engine()
 
     __session = sessionmaker(__engine, expire_on_commit=False, class_=Session)
 
