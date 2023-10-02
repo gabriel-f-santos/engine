@@ -15,7 +15,7 @@ Globals:
     Timeout: 10
     Environment:
       Variables:
-        DEBUG: False
+        DEBUG: "0"
         DB_CONNECT: !Ref DbConnection
 
 Resources:
