@@ -17,11 +17,11 @@ Globals:
       Variables:
         DEBUG: "0"
         DB_CONNECT: !Ref DbConnection
-      VpcConfig:
-        SecurityGroupIds:
-          - sg-086a0d64f78b151e5
-        SubnetIds:
-          - subnet-0b52b7916b3b646c7
+    VpcConfig:
+      SecurityGroupIds:
+        - sg-086a0d64f78b151e5
+      SubnetIds:
+        - subnet-0b52b7916b3b646c7
 
 Resources:
 
