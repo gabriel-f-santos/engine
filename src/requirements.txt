@@ -5,3 +5,4 @@ flake8
 alembic
 PyJWT
 bcrypt
+psycopg2-binary
