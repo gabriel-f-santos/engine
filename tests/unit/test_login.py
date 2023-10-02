@@ -1,8 +1,8 @@
 from http import HTTPStatus
 import json
 import unittest
-from src.handlers import login
-from src.models import db_session, Tenant
+from src import login, db_session
+from src.models import Tenant
 import bcrypt
 
 

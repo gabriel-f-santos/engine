@@ -1,5 +1,6 @@
 import unittest
-from src.models import db_session, Tenant, Policy
+from src.models import Tenant, Policy
+from src import db_session
 
 
 class TestModels(unittest.TestCase):

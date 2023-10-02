@@ -1,6 +1,7 @@
 import json
+from src import db_session
 from http import HTTPStatus
-from src.models import db_session, Tenant
+from src.models import Tenant
 import bcrypt
 import secrets
 

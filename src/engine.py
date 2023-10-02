@@ -1,6 +1,7 @@
 import json
 from http import HTTPStatus
-from src.models import db_session, Policy
+from src.models import Policy
+from src import db_session
 import operator
 
 comparison_operators = {

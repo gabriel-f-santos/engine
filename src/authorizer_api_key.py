@@ -1,4 +1,5 @@
-from src.models import Tenant, db_session
+from src.models import Tenant
+import db_session
 
 
 def lambda_handler(event, context):

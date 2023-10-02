@@ -1,8 +1,8 @@
 from http import HTTPStatus
 import json
 import unittest
-from src.handlers import create_tenant
-from src.models import db_session, Tenant
+from src import create_tenant, db_session
+from src.models import Tenant
 
 
 class TestCreateTenantHandler(unittest.TestCase):

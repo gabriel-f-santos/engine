@@ -14,8 +14,8 @@ Resources:
   CreatePolicyFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: src
-      Handler: handlers.create_policy.lambda_handler
+      CodeUri: src/
+      Handler: create_policy.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
@@ -39,8 +39,8 @@ Resources:
   CreateTenantFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: src
-      Handler: handlers.create_tenant.lambda_handler
+      CodeUri: src/
+      Handler: create_tenant.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
@@ -54,8 +54,8 @@ Resources:
   LoginFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: src
-      Handler: handlers.login.lambda_handler
+      CodeUri: src/
+      Handler: login.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
@@ -69,8 +69,8 @@ Resources:
   EngineFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: src
-      Handler: handlers.engine.lambda_handler
+      CodeUri: src/
+      Handler: engine.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
@@ -94,8 +94,8 @@ Resources:
   AuthorizerFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: src
-      Handler: handlers.authorizer.lambda_handler
+      CodeUri: src/
+      Handler: authorizer.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
@@ -103,8 +103,8 @@ Resources:
   AuthorizerAPIKeyFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: src
-      Handler: handlers.authorizer_api_key.lambda_handler
+      CodeUri: src/
+      Handler: authorizer_api_key.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64

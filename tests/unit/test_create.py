@@ -1,8 +1,8 @@
 import json
 import unittest
 from http import HTTPStatus
-from src.handlers import create_policy
-from src.models import db_session, Tenant, Policy
+from src import create_policy, db_session
+from src.models import Tenant, Policy
 
 
 class TestCreateHandler(unittest.TestCase):

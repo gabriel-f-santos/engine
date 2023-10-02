@@ -1,6 +1,5 @@
 import jwt
 from src import settings
-from src.models import Tenant, db_session
 
 
 def lambda_handler(event, context):
@@ -24,6 +23,7 @@ def lambda_handler(event, context):
 
     authResponse["policyDocument"]["Statement"][0]["Effect"] = "Deny"
     return authResponse
+
 
 def check_jwt_auth(token, authResponse):
     try:
