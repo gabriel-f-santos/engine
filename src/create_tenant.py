@@ -4,11 +4,21 @@ from http import HTTPStatus
 from models import Tenant
 import bcrypt
 import secrets
+import logging
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
     body = json.loads(event["body"])
-    password = bcrypt.hashpw(body["password"].encode(), bcrypt.gensalt()).decode()
+
+    logger.info(f"Received body {body}")
+
+    password = bcrypt.hashpw(
+        body["password"].encode(), bcrypt.gensalt()
+    ).decode()
 
     api_key = secrets.token_hex(16)
     tenant = Tenant(

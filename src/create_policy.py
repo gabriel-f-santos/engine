@@ -2,10 +2,18 @@ import json
 from http import HTTPStatus
 from models import Tenant, Policy
 import db_session
+import logging
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
     body = json.loads(event["body"])
+
+    logger.info(f"Received body {body}")
+
     tenant_id = context["authorizer"].get("tenant_id")
     with db_session.create_session() as session:
         tenant = session.query(Tenant).filter_by(id=tenant_id).first()

@@ -21,17 +21,19 @@ def create_engine():
 
     if __engine:
         return __engine
-    
-    if settings.DEBUG:
 
+    if settings.DEBUG:
         # import ipdb;ipdb.set_trace()
         db_path = f"sqlite:///src/mydatabase.db"
-        __engine = sa.create_engine(url=db_path, echo=False, connect_args={"check_same_thread": False})
+        __engine = sa.create_engine(
+            url=db_path, echo=False, connect_args={"check_same_thread": False}
+        )
     else:
         conn_str = settings.DB_CONNECT
         __engine = sa.create_engine(url=conn_str, echo=False)
-    
+
     return __engine
+
 
 def create_session() -> Session:
     """

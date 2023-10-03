@@ -5,10 +5,17 @@ from models import Tenant
 import settings, db_session
 import jwt
 import bcrypt
+import logging
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
     body = json.loads(event["body"])
+
+    logger.info(f"Received body {body}")
 
     with db_session.create_session() as session:
         tenant = session.query(Tenant).filter_by(email=body["email"]).first()

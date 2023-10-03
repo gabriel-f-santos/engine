@@ -1,8 +1,15 @@
 import jwt
 import settings
+import logging
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
+    logger.info(f"Received event {event}")
+
     authorization = event["headers"].get("Authorization")
 
     authResponse = {
