@@ -58,7 +58,7 @@ Resources:
           Properties:
             Path: /create-policy
             Method: post
-            RestApiId: !Ref ApiGatewayAuthorizer
+            RestApiId: !Ref ApiGatewayAuthorizerToken
 
   CreateTenantFunction:
     Type: AWS::Serverless::Function 
