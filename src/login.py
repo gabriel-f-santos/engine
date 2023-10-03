@@ -14,7 +14,7 @@ def lambda_handler(event, context):
         tenant = session.query(Tenant).filter_by(email=body["email"]).first()
 
     match_password = bcrypt.checkpw(
-        body["password"].encode("utf-8"), tenant.password
+        body["password"].encode(), tenant.password.encode()
     )
 
     if match_password:

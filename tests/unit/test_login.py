@@ -9,8 +9,8 @@ import bcrypt
 class TestLoginHandler(unittest.TestCase):
     def setUp(self):
         self.password = bcrypt.hashpw(
-            "correct_password".encode("utf-8"), bcrypt.gensalt()
-        )
+            "correct_password".encode(), bcrypt.gensalt()
+        ).decode()
         tenant = Tenant(
             name="Tenant Name",
             email="tenant@example.com",

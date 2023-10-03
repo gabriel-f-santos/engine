@@ -8,7 +8,7 @@ import secrets
 
 def lambda_handler(event, context):
     body = json.loads(event["body"])
-    password = bcrypt.hashpw(body["password"].encode("utf-8"), bcrypt.gensalt())
+    password = bcrypt.hashpw(body["password"].encode(), bcrypt.gensalt()).decode()
 
     api_key = secrets.token_hex(16)
     tenant = Tenant(
