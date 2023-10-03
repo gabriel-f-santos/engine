@@ -32,6 +32,7 @@ def lambda_handler(event, context):
                 "tenant_id": tenant.id,
                 "apiKey": tenant.api_key,
                 "exp": datetime.utcnow() + timedelta(days=5),
+                "sub": tenant.email
             },
             settings.JWT_SECRET,
             algorithm="HS256",

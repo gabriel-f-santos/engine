@@ -42,6 +42,6 @@ def check_jwt_auth(token, authResponse):
         return authResponse
     except Exception:
         logger.info("Not authorized")
-        authResponse["principalId"] = ("unauthenticated",)
+        authResponse["principalId"] = "unauthenticated"
         authResponse["policyDocument"]["Statement"][0]["Effect"] = "Deny"
         return authResponse
