@@ -38,8 +38,10 @@ def check_jwt_auth(token, authResponse):
         payload = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"])
         authResponse["context"] = {"tenant_id": payload["tenant_id"]}
         authResponse["principalId"] = payload["sub"]
+        logger.info("authorized")
         return authResponse
     except Exception:
+        logger.info("Not authorized")
         authResponse["principalId"] = ("unauthenticated",)
         authResponse["policyDocument"]["Statement"][0]["Effect"] = "Deny"
         return authResponse
