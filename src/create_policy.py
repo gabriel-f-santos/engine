@@ -14,8 +14,11 @@ def lambda_handler(event, context):
 
     logger.info(f"Received body {body}")
     logger.info(f"Received event {event}")
+    logger.info(f"Received event {context}")
 
-    tenant_id = context["authorizer"].get("tenant_id")
+    authorizer = event["requestContext"]["authorizer"]
+
+    tenant_id = authorizer["tenant_id"]
     with db_session.create_session() as session:
         tenant = session.query(Tenant).filter_by(id=tenant_id).first()
 

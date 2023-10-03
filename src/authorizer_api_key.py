@@ -11,7 +11,7 @@ def lambda_handler(event, context):
     logger.info(f"Received event {event}")
     logger.info(f"Received context {context}")
 
-    api_key = event["headers"].get("x-api-key")
+    api_key = event["authorizationToken"]
 
     authResponse = {
         "policyDocument": {
