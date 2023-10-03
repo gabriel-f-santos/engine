@@ -13,6 +13,7 @@ def lambda_handler(event, context):
     body = json.loads(event["body"])
 
     logger.info(f"Received body {body}")
+    logger.info(f"Received event {event}")
 
     tenant_id = context["authorizer"].get("tenant_id")
     with db_session.create_session() as session:

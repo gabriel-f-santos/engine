@@ -9,6 +9,7 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     logger.info(f"Received event {event}")
+    logger.info(f"Received context {context}")
 
     authorization = event["headers"].get("Authorization")
 

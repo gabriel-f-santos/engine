@@ -15,6 +15,8 @@ def lambda_handler(event, context):
     body = json.loads(event["body"])
 
     logger.info(f"Received body {body}")
+    logger.info(f"Received event {event}")
+    logger.info(f"Received context {context}")
 
     password = bcrypt.hashpw(
         body["password"].encode(), bcrypt.gensalt()

@@ -26,6 +26,9 @@ def evaluate_field(value_to_evaluate, condition, threshold):
 
 
 def lambda_handler(event, context):
+    logger.info(f"Received event {event}")
+    logger.info(f"Received context {context}")
+
     tenant_id = context["authorizer"]["tenant_id"]
     body = json.loads(event["body"])
 

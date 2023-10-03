@@ -16,6 +16,8 @@ def lambda_handler(event, context):
     body = json.loads(event["body"])
 
     logger.info(f"Received body {body}")
+    logger.info(f"Received event {event}")
+    logger.info(f"Received context {context}")
 
     with db_session.create_session() as session:
         tenant = session.query(Tenant).filter_by(email=body["email"]).first()

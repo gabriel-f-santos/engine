@@ -17,15 +17,14 @@ jobs:
       - run: sam build --use-container
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
 
-      - name: Invoke Lambda Function
-        run: |
-          aws lambda invoke \
-            --function-name MigrateFunction \
-            --payload '{"key": "value"}' \
-            output.json
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # - name: Invoke migrate Lambda Function
+      #   run: |
+      #     aws lambda invoke \
+      #       --function-name MigrateFunction
+      #       output.json
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Display Lambda Output
         run: cat output.json
