@@ -43,12 +43,7 @@ Resources:
               DefaultAuthorizer: AuthorizerFunction
               Authorizers:
                 AuthorizerFunction:
-                  FunctionPayloadType: REQUEST
-                  FunctionArn: 
-                    GetAtt: AuthorizerFunction.Arn
-                  Identity:
-                    Headers:
-                      - Authorization
+                  FunctionArn: !GetAtt AuthorizerFunction.Arn
 
   CreateTenantFunction:
     Type: AWS::Serverless::Function 
