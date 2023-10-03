@@ -24,6 +24,25 @@ Globals:
         - subnet-0b52b7916b3b646c7
 
 Resources:
+  ApiGatewayAuthorizerToken:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        DefaultAuthorizer: AuthorizerFunction
+        Authorizers:
+          AuthorizerFunction:
+            FunctionArn: !GetAtt AuthorizerFunction.Arn
+
+  ApiGatewayAuthorizerApiKey:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        DefaultAuthorizer: AuthorizerAPIKeyFunction
+        Authorizers:
+          AuthorizerAPIKeyFunction:
+            FunctionArn: !GetAtt AuthorizerAPIKeyFunction.Arn
 
   CreatePolicyFunction:
     Type: AWS::Serverless::Function 
@@ -39,11 +58,7 @@ Resources:
           Properties:
             Path: /create-policy
             Method: post
-            Auth:
-              DefaultAuthorizer: AuthorizerFunction
-              Authorizers:
-                AuthorizerFunction:
-                  FunctionArn: !GetAtt AuthorizerFunction.Arn
+            RestApiId: !Ref ApiGatewayAuthorizer
 
   CreateTenantFunction:
     Type: AWS::Serverless::Function 
@@ -88,17 +103,8 @@ Resources:
           Type: Api 
           Properties:
             Path: /create-engine
-            Method: post
-            Auth:
-              DefaultAuthorizer: AuthorizerAPIKeyFunction
-              Authorizers:
-                AuthorizerAPIKeyFunction:
-                  FunctionPayloadType: REQUEST
-                  FunctionArn: 
-                    GetAtt: AuthorizerAPIKeyFunction.Arn
-                  Identity:
-                    Headers:
-                      - x-api-key
+            Method: post 
+            RestApiId: !Ref ApiGatewayAuthorizerApiKey
 
   AuthorizerFunction:
     Type: AWS::Serverless::Function 
