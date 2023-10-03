@@ -68,8 +68,8 @@ Resources:
             Method: post
             RestApiId: !Ref ApiGateway
             Auth:
-              Authorizer: None
-              
+              Authorizer: NONE
+
   LoginFunction:
     Type: AWS::Serverless::Function 
     Properties:
@@ -86,7 +86,7 @@ Resources:
             Method: post
             RestApiId: !Ref ApiGateway
             Auth:
-              Authorizer: None
+              Authorizer: NONE
 
   EngineFunction:
     Type: AWS::Serverless::Function 
