@@ -36,7 +36,7 @@ def lambda_handler(event, context):
     logger.info(f"Received body {body}")
 
     with db_session.create_session() as session:
-        policy = session.query(Policy).filter_by(id=tenant_id).first()
+        policy = session.query(Policy).filter_by(tenant_id=tenant_id).first()
         policy_details = policy.policy_details
 
     for index, policy in policy_details.items():
