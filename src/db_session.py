@@ -22,7 +22,7 @@ def create_engine():
     if __engine:
         return __engine
 
-    if settings.DEBUG:
+    if settings.TESTING:
         # import ipdb;ipdb.set_trace()
         db_path = f"sqlite:///src/mydatabase.db"
         __engine = sa.create_engine(

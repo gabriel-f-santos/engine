@@ -15,7 +15,8 @@ Globals:
     Timeout: 10
     Environment:
       Variables:
-        DEBUG: "0"
+        DEBUG: "1"
+        ENVIRONMENT: "PRD"
         DB_CONNECT: !Ref DbConnection
     VpcConfig:
       SecurityGroupIds:
