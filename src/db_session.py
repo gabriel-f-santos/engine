@@ -23,7 +23,6 @@ def create_engine():
         return __engine
 
     if settings.TESTING:
-        # import ipdb;ipdb.set_trace()
         db_path = f"sqlite:///src/mydatabase.db"
         __engine = sa.create_engine(
             url=db_path, echo=False, connect_args={"check_same_thread": False}

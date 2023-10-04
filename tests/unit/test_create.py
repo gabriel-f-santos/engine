@@ -1,3 +1,4 @@
+import copy
 import json
 import unittest
 from http import HTTPStatus
@@ -29,6 +30,7 @@ class TestCreateHandler(unittest.TestCase):
             ),
             "resource": "/{proxy+}",
             "requestContext": {
+                "authorizer": None,
                 "resourceId": "123456",
                 "apiId": "1234567890",
                 "resourcePath": "/{proxy+}",
@@ -84,8 +86,14 @@ class TestCreateHandler(unittest.TestCase):
             session.commit()
 
     def test_successful_policy_creation(self):
-        context = {"authorizer": {"tenant_id": self.tenant_id}}
-        response = create_policy.lambda_handler(self.event, context)
+        event = copy.deepcopy(self.event)
+        event["requestContext"]["authorizer"] = {
+            "tenant_id": self.tenant_id,
+            "principalId": None,
+            "integrationLatency": 4639,
+        }
+
+        response = create_policy.lambda_handler(event, {})
 
         self.assertEqual(response["statusCode"], HTTPStatus.CREATED.value)
         expected_body = json.dumps({"message": "policy created"})
@@ -109,8 +117,13 @@ class TestCreateHandler(unittest.TestCase):
             }
         )
 
-        context = {"authorizer": {"tenant_id": 999}}
-        response = create_policy.lambda_handler(event, context)
+        event = copy.deepcopy(self.event)
+        event["requestContext"]["authorizer"] = {
+            "tenant_id": 999,
+            "principalId": None,
+            "integrationLatency": 4639,
+        }
+        response = create_policy.lambda_handler(event, {})
 
         self.assertEqual(response["statusCode"], HTTPStatus.FORBIDDEN.value)
         expected_body = json.dumps({"message": "forbidden"})
@@ -122,8 +135,13 @@ class TestCreateHandler(unittest.TestCase):
             tenant.is_active = False
             session.commit()
 
-        context = {"authorizer": {"tenant_id": self.tenant_id}}
-        response = create_policy.lambda_handler(self.event, context)
+        event = copy.deepcopy(self.event)
+        event["requestContext"]["authorizer"] = {
+            "tenant_id": self.tenant_id,
+            "principalId": None,
+            "integrationLatency": 4639,
+        }
+        response = create_policy.lambda_handler(event, {})
 
         self.assertEqual(response["statusCode"], HTTPStatus.UNAUTHORIZED.value)
         expected_body = json.dumps({"message": "forbidden"})

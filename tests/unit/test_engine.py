@@ -1,3 +1,4 @@
+import copy
 import json
 import unittest
 from http import HTTPStatus
@@ -88,29 +89,44 @@ class TestCreateHandler(unittest.TestCase):
             session.commit()
 
     def test_successful_engine_evaluation(self):
-        context = {"authorizer": {"tenant_id": self.tenant_id}}
+        event = copy.deepcopy(self.event)
+        event["requestContext"]["authorizer"] = {
+            "tenant_id": self.tenant_id,
+            "principalId": None,
+            "integrationLatency": 4639,
+        }
 
-        response = engine.lambda_handler(self.event, context)
+        response = engine.lambda_handler(event, {})
 
         self.assertEqual(response["statusCode"], HTTPStatus.OK.value)
         expected_body = json.dumps({"decision": True})
         self.assertEqual(response["body"], expected_body)
 
     def test_rejected_age_engine_evaluation(self):
-        context = {"authorizer": {"tenant_id": self.tenant_id}}
+        event = copy.deepcopy(self.event)
+        event["requestContext"]["authorizer"] = {
+            "tenant_id": self.tenant_id,
+            "principalId": None,
+            "integrationLatency": 4639,
+        }
+        event["body"] = json.dumps({"age": 20, "income": 3000})
 
-        self.event["body"] = json.dumps({"age": 20, "income": 3000})
-        response = engine.lambda_handler(self.event, context)
+        response = engine.lambda_handler(event, {})
 
         self.assertEqual(response["statusCode"], HTTPStatus.OK.value)
         expected_body = json.dumps({"decision": False})
         self.assertEqual(response["body"], expected_body)
 
     def test_rejected_income_engine_evaluation(self):
-        context = {"authorizer": {"tenant_id": self.tenant_id}}
+        event = copy.deepcopy(self.event)
+        event["requestContext"]["authorizer"] = {
+            "tenant_id": self.tenant_id,
+            "principalId": None,
+            "integrationLatency": 4639,
+        }
 
-        self.event["body"] = json.dumps({"age": 21, "income": 1000})
-        response = engine.lambda_handler(self.event, context)
+        event["body"] = json.dumps({"age": 21, "income": 1000})
+        response = engine.lambda_handler(event, {})
 
         self.assertEqual(response["statusCode"], HTTPStatus.OK.value)
         expected_body = json.dumps({"decision": True})
