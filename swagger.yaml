@@ -1,0 +1,162 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Tenant Management API"
+paths:
+  /create-tenant:
+    post:
+      summary: "Create a new tenant"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Tenant details"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+              email:
+                type: "string"
+              password:
+                type: "string"
+      responses:
+        200:
+          description: "Tenant created successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                example: "Tenant created successfully"
+
+  /login:
+    post:
+      summary: "Tenant login"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Tenant credentials"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
+      responses:
+        200:
+          description: "Tenant logged in successfully"
+          schema:
+            type: "object"
+            properties:
+              token:
+                type: "string"
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+              apiKey:
+                type: "string"
+                example: "1109a9322b8a3dea12e1d3cd86f49d02"
+
+  /create-policy:
+    post:
+      summary: "Create a new policy for the tenant"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          type: "string"
+          required: true
+          description: "JWT Token"
+        - in: "body"
+          name: "body"
+          description: "Policy details"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+              policy_details:
+                type: "object"
+                properties:
+                  "1":
+                    type: "object"
+                    properties:
+                      condition:
+                        type: "string"
+                        example: "gt"
+                      field:
+                        type: "string"
+                        example: "age"
+                      threshold:
+                        type: "integer"
+                        example: 20
+                  "2":
+                    type: "object"
+                    properties:
+                      condition:
+                        type: "string"
+                        example: "gte"
+                      field:
+                        type: "string"
+                        example: "income"
+                      threshold:
+                        type: "integer"
+                        example: 3000
+      responses:
+        200:
+          description: "Policy created successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                example: "Policy created successfully"
+
+  /create-engine:
+    post:
+      summary: "Create an engine rule for the tenant"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          type: "string"
+          required: true
+          description: "API Key"
+        - in: "body"
+          name: "body"
+          description: "Engine rule details"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              age:
+                type: "integer"
+                example: 21
+              income:
+                type: "integer"
+                example: 3000
+      responses:
+        200:
+          description: "Engine rule evaluated successfully"
+          schema:
+            type: "object"
+            properties:
+              decision:
+                type: "boolean"
+                example: true

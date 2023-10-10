@@ -77,7 +77,9 @@ See the [AWS SAM developer guide](https://docs.aws.amazon.com/serverless-applica
 
 
 #Project structure:
-The project is organized for create tenant (to permit n clients):
+
+###Creating a Tenant
+To create a tenant (to permit multiple clients), you can use the following API endpoint with a POST request::
 
 ```
 curl --request POST \
@@ -92,8 +94,9 @@ curl --request POST \
 
 {"message": "Tenant created sucessfully"}%
 ```
+###Tenant Login and Structure Creation
 
-after create a tenant, they can login to get their credentials and create structure (used for frontend) and an api-key will be generated to allow backend of tenant make requests to evaluate values in our engine.
+After creating a tenant, they can log in to obtain their credentials. They can then create a structure (used for the frontend) with the token jwt received and an API key will be generated to allow the backend of the tenant to make requests to evaluate values in your engine.
 
 
 ```
@@ -109,9 +112,15 @@ curl --request POST \
 
 {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOjMsImFwaUtleSI6IjExMDlhOTMyMmI4YTNkZWExMmUxZDNjZDg2ZjQ5ZDAyIiwiZXhwIjoxNjk3MzI4NjQ1LCJzdWIiOiJ0ZW5hbnQzQGdtYWlsLmNvbSJ9.L2hkj6S_-wfzwT4TEJPIS-Ct-XDAI6epIwGYILlCvlA", "apiKey": "1109a9322b8a3dea12e1d3cd86f49d02"}%
 ```
+###Creating a Policy 
+The frontend, using JWT, can create a rule, and the backend will associate this rule/policy with the tenant. Conditions available for policies are:
 
-The frontend using jwt now can create a rule and the backend will associate this rule/policy with the tenant.
-
+- gt: Greater than
+- gte: Greater than or equal to
+- lt: Lower than
+- lte: Lower than or equal to
+- eq: Equal to
+- ne: Not equal to
 
 ```
 curl --request POST \
@@ -137,9 +146,28 @@ curl --request POST \
 
 {"message": "policy created"}%
 ```
+### Using the Engine Rule
+Now, the tenant can use their engine rule. As defined previously, if age is greater than 20 and income is greater or equal to 3000, the application should be approved.
 
-Now, the tenant can use their engine rule:
 
 ```
+curl --request POST \
+  --url https://76x998fgo7.execute-api.us-east-1.amazonaws.com/Prod/create-engine \
+  --header 'Authorization: 1109a9322b8a3dea12e1d3cd86f49d02' \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/2023.5.8' \
+  --data '{"age": 21, "income": 3000}'
+{"decision": true}% 
+```
 
+With income less than 3000:
+
+```
+curl --request POST \
+  --url https://76x998fgo7.execute-api.us-east-1.amazonaws.com/Prod/create-engine \
+  --header 'Authorization: 1109a9322b8a3dea12e1d3cd86f49d02' \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/2023.5.8' \
+  --data '{"age": 21, "income": 2999}'
+{"decision": false}% 
 ```
