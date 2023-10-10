@@ -3,7 +3,7 @@
 This project is build using aws sam (serverless application model) where we can define our infrastucture as a code and use lambda functions as api, cron function and more. This provide us a simple way to manage infrastructure serverless, being charged by demand, so we can focus on code and business rules.
 This project uses python 3.11, its strongly recommended to use pyenv to manage multiple versions of python to run this project, its a best practice instead of install a new version of python global in your computer.
 
-##If you choose pyenv to install python:
+## If you choose pyenv to install python:
 
 Here we have a simple reference to install pyenv
 https://dev.to/womakerscode/instalando-o-python-com-o-pyenv-2dc7
@@ -76,9 +76,9 @@ The project its already with CI/CD using github actions, in every merge we make 
 See the [AWS SAM developer guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) for an introduction to SAM specification, the SAM CLI, and serverless application concepts.
 
 
-#Project structure:
+# Project structure:
 
-###Creating a Tenant
+### Creating a Tenant
 To create a tenant (to permit multiple clients), you can use the following API endpoint with a POST request::
 
 ```
@@ -94,7 +94,7 @@ curl --request POST \
 
 {"message": "Tenant created sucessfully"}%
 ```
-###Tenant Login and Structure Creation
+### Tenant Login and Structure Creation
 
 After creating a tenant, they can log in to obtain their credentials. They can then create a structure (used for the frontend) with the token jwt received and an API key will be generated to allow the backend of the tenant to make requests to evaluate values in your engine.
 
@@ -112,7 +112,7 @@ curl --request POST \
 
 {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOjMsImFwaUtleSI6IjExMDlhOTMyMmI4YTNkZWExMmUxZDNjZDg2ZjQ5ZDAyIiwiZXhwIjoxNjk3MzI4NjQ1LCJzdWIiOiJ0ZW5hbnQzQGdtYWlsLmNvbSJ9.L2hkj6S_-wfzwT4TEJPIS-Ct-XDAI6epIwGYILlCvlA", "apiKey": "1109a9322b8a3dea12e1d3cd86f49d02"}%
 ```
-###Creating a Policy 
+### Creating a Policy 
 The frontend, using JWT, can create a rule, and the backend will associate this rule/policy with the tenant. Conditions available for policies are:
 
 - gt: Greater than
