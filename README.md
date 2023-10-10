@@ -64,20 +64,6 @@ sam local invoke CreatePolicyFunction --event events/event.json
 
 Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
 
-Run functions locally and invoke them with the `sam local invoke` command.
-
-```bash
-sam-engine$ sam local invoke HelloWorldFunction --event events/event.json
-```
-
-The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
-
-```bash
-sam-engine$ sam local start-api
-sam-engine$ curl http://localhost:3000/
-```
-
-
 
 ## Deploy the sample application
 
@@ -91,3 +77,69 @@ See the [AWS SAM developer guide](https://docs.aws.amazon.com/serverless-applica
 
 
 #Project structure:
+The project is organized for create tenant (to permit n clients):
+
+```
+curl --request POST \
+  --url https://76x998fgo7.execute-api.us-east-1.amazonaws.com/Prod/create-tenant \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/2023.5.8' \
+  --data '{
+		"name": "tenant teste",
+		"email": "tenant3@gmail.com",
+		"password": "123password"
+}'
+
+{"message": "Tenant created sucessfully"}%
+```
+
+after create a tenant, they can login to get their credentials and create structure (used for frontend) and an api-key will be generated to allow backend of tenant make requests to evaluate values in our engine.
+
+
+```
+curl --request POST \
+  --url https://76x998fgo7.execute-api.us-east-1.amazonaws.com/Prod/login \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/2023.5.8' \
+  --data '{
+		"email": "tenant3@gmail.com",
+		"password": "123password"
+}'
+
+
+{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOjMsImFwaUtleSI6IjExMDlhOTMyMmI4YTNkZWExMmUxZDNjZDg2ZjQ5ZDAyIiwiZXhwIjoxNjk3MzI4NjQ1LCJzdWIiOiJ0ZW5hbnQzQGdtYWlsLmNvbSJ9.L2hkj6S_-wfzwT4TEJPIS-Ct-XDAI6epIwGYILlCvlA", "apiKey": "1109a9322b8a3dea12e1d3cd86f49d02"}%
+```
+
+The frontend using jwt now can create a rule and the backend will associate this rule/policy with the tenant.
+
+
+```
+curl --request POST \
+  --url https://76x998fgo7.execute-api.us-east-1.amazonaws.com/Prod/create-policy \
+  --header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOjMsImFwaUtleSI6IjExMDlhOTMyMmI4YTNkZWExMmUxZDNjZDg2ZjQ5ZDAyIiwiZXhwIjoxNjk3MzI5MTY0LCJzdWIiOiJ0ZW5hbnQzQGdtYWlsLmNvbSJ9.iulY4-ChwoTUyZiIpiarSU5TMG7GIi5iOaKDvUEfXQI' \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/2023.5.8' \
+  --data '{
+		"name": "Policy 3",
+		"policy_details": {
+				"1": {
+						"condition": "gt",
+						"field": "age",
+						"threshold": 20
+				},
+				"2": {
+						"condition": "gte",
+						"field": "income",
+						"threshold": 3000
+				}
+		}
+}'
+
+{"message": "policy created"}%
+```
+
+Now, the tenant can use their engine rule:
+
+```
+
+```

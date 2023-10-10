@@ -40,7 +40,7 @@ def lambda_handler(event, context):
 
         return {
             "statusCode": HTTPStatus.OK.value,
-            "body": json.dumps({"token": token}),
+            "body": json.dumps({"token": token, "apiKey": tenant.api_key}),
         }
 
     return {
