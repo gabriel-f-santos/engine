@@ -171,3 +171,14 @@ curl --request POST \
   --data '{"age": 21, "income": 2999}'
 {"decision": false}% 
 ```
+
+## System design
+
+We use lambda functions associateds with api gateway to receive requests and manage authorization for each endpoint.
+
+We associate in api gateway the authorizers we will use (for jwt and apikey validation) and for each lambda functino we can associate (private endpoints) or keep the endpoint public.
+![api gateway security for endpoints](image.png)
+
+Api structure:
+
+![Alt text](<Diagrama em branco.jpeg>)
